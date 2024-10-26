@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://apis.google.com/js/api.js"></script>
+    <title>Profile Page</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000; 
+            color: #fff; 
+        }
+        .container {
+            width: 90%;
+            max-width: 800px; 
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #111; 
+            box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden; 
+        }
+        .header {
+            position: relative;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            width: 100%;
+            height: 200px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .profile-pic {
+            position: absolute;
+            top: 130px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #111;
+            overflow: hidden;
+        }
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-info {
+            padding: 150px 0 20px;
+            text-align: center;
+        }
+        .profile-info h1 {
+            margin-bottom: 5px;
+            font-size: 1.8em; 
+        }
+        .profile-info p {
+            color: #ccc;
+            margin-bottom: 10px;
+            font-size: 1.2em; 
+        }
+        .edit-button, .schedule-button {
+            padding: 10px 15px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff; 
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s; 
+        }
+        .edit-button:hover, .schedule-button:hover {
+            background-color: #0056b3; 
+        }
+        .skills {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .skills h2 {
+            margin-bottom: 10px; 
+        }
+        .skills span {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        .bio {
+            margin-top: 20px;
+        }
+        .bio textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #333;
+            background-color: #222;
+            color: #fff;
+            border-radius: 5px;
+            resize: none;
+        }
+        .ratings, .review-section, .schedule {
+            margin-top: 30px;
+        }
+        .star {
+            font-size: 1.5em;
+            color: #FFD700; 
+            cursor: pointer;
+            transition: color 0.3s; 
+        }
+        .star:hover {
+            color: #FFC300; 
+        }
+        .review-section textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #333;
+            background-color: #222;
+            color: #fff;
+            margin-top: 10px;
+            resize: none; 
+        }
+        #timeSlots {
+            color: #ccc; 
+            text-align: center; 
+        }
+        .available-slot {
+            cursor: pointer;
+            color: #007bff; 
+            text-decoration: underline; 
+        }
+        .available-slot:hover {
+            color: #0056b3; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <img id="headerImage" src="https://via.placeholder.com/800x200" alt="Header Image">
+            <div class="profile-pic" id="profilePicContainer">
+                <img id="profilePic" src="https://via.placeholder.com/120" alt="Profile Picture">
+            </div>
+        </div>
+
+        <div class="profile-info">
+            <h1 id="fullName">John Doe</h1>
+            <p id="jobTitle">Web Developer & Tutor</p>
+            <button class="edit-button" id="editProfileButton">Edit Profile</button>
+        </div>
+
+        <div class="skills">
+            <h2>Skills</h2>
+            <span>HTML</span>
+            <span>CSS</span>
+            <span>JavaScript</span>
+            <span>React</span>
+        </div>
+
+        <div class="bio">
+            <h2>About Me</h2>
+            <textarea id="bioText" rows="5" placeholder="Tell us about yourself..."></textarea>
+            <button id="saveBioButton" class="edit-button">Save Bio</button>
+        </div>
+
+        <div class="ratings">
+            <h2>Rating</h2>
+            <span class="star" data-value="1">★</span>
+            <span class="star" data-value="2">★</span>
+            <span class="star" data-value="3">★</span>
+            <span class="star" data-value="4">★</span>
+            <span class="star" data-value="5">★</span>
+            <p id="ratingValue">0/5</p>
+        </div>
+
+        <div class="review-section">
+            <h2>Leave a Review</h2>
+            <textarea id="reviewText" rows="3" placeholder="Write a review..."></textarea>
+            <button id="submitReview" class="edit-button">Submit Review</button>
+        </div>
+
+        <div class="schedule">
+            <h2>Available Sessions</h2>
+            <button id="googleCalendarButton" class="schedule-button">View Availability on Google Calendar</button>
+            <div id="timeSlots">
+                <p>Time slots will appear here when connected to Google Calendar.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        gapi.load('client:auth2', initializeGoogleAPI);
+
+        function initializeGoogleAPI() {
+            gapi.client.init({
+                clientId: '196620301823-8lopp7befutlo3s2r99d39l9pf8cur7n.apps.googleusercontent.com', 
+                scope: 'https://www.googleapis.com/auth/calendar.readonly'
+            }).then(() => {
+                console.log("Google API initialized");
+                authenticate(); 
+            }).catch(error => console.error("Error initializing Google API:", error));
+        }
+
+
+        function authenticate() {
+            gapi.auth2.getAuthInstance().signIn().then(() => {
+                console.log("User signed in");
+                listCalendarEvents(); 
+            }).catch(error => console.error("Error signing in:", error));
+        }
+
+
+        function listCalendarEvents() {
+            gapi.client.calendar.events.list({
+                'calendarId': 'primary',
+                'timeMin': (new Date()).toISOString(),
+                'showDeleted': false,
+                'singleEvents': true,
+                'maxResults': 10,
+                'orderBy': 'startTime'
+            }).then(response => {
+                const events = response.result.items;
+                const timeSlots = document.getElementById('timeSlots');
+                timeSlots.innerHTML = ''; 
+
+                const bookedSlots = new Set(events.map(event => {
+                    const start = new Date(event.start.dateTime || event.start.date);
+                    return start.toLocaleString(); 
+                }));
+
+                const availableSlots = ['2024-10-30T10:00:00', '2024-10-30T11:00:00', '2024-10-30T12:00:00'];
+
+                availableSlots.forEach(slot => {
+                    const slotTime = new Date(slot).toLocaleString();
+                    const slotElement = document.createElement('div');
+                    slotElement.textContent = slotTime;
+
+                    if (bookedSlots.has(slotTime)) {
+                        slotElement.style.color = '#ccc'; 
+                    } else {
+                        slotElement.classList.add('available-slot');
+                        slotElement.onclick = () => bookSlot(slot);
+                    }
+
+                    timeSlots.appendChild(slotElement);
+                });
+            }).catch(error => console.error("Error fetching calendar events:", error));
+        }
+
+        function bookSlot(slot) {
+            alert(`Slot ${slot} booked!`); 
+        }
+
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function () {
+                const ratingValue = this.getAttribute('data-value');
+                document.getElementById('ratingValue').textContent = `${ratingValue}/5`;
+
+                document.querySelectorAll('.star').forEach(star => {
+                    star.style.color = star.getAttribute('data-value') <= ratingValue ? '#FFD700' : '#ccc';
+                });
+            });
+        });
+
+        document.getElementById('saveBioButton').onclick = function () {
+            const bioText = document.getElementById('bioText').value;
+            alert(`Bio saved: ${bioText}`); 
+        };
+
+        document.getElementById('submitReview').onclick = function () {
+            const reviewText = document.getElementById('reviewText').value;
+            alert(`Review submitted: ${reviewText}`); 
+        };
+    </script>
+</body>
+</html>

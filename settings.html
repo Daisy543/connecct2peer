@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings Page</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 60%;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            min-height: 80vh;
+        }
+        .sidebar {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 20px;
+        }
+        .sidebar h2 {
+            color: #007bff;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .sidebar ul li:hover {
+            background-color: #007bff;
+        }
+        .sidebar ul li.active {
+            background-color: #007bff;
+        }
+        .content {
+            padding: 30px;
+        }
+        .content h2 {
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .content section {
+            display: none;
+            margin-top: 20px;
+        }
+        .content section.active {
+            display: block;
+        }
+        .content label {
+            display: block;
+            margin-top: 10px;
+        }
+        .content input, .content select, .content button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: black;
+            color: white;
+            cursor: pointer;
+            border: none;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="sidebar">
+            <h2>Settings</h2>
+            <ul>
+                <li id="accountTab" class="active">Your Account</li>
+                <li id="privacyTab">Privacy and Safety</li>
+                <li id="accessibilityTab">Accessibility</li>
+                <li id="helpTab">Help Center</li>
+                <li id="Back">Back</li>
+            </ul>
+        </div>
+        
+        <div class="content">
+            
+            <section id="accountSection" class="active">
+                <h2>Your Account</h2>
+                <label for="username">Account Information</label>
+                <input type="text" id="username" placeholder="Change Username">
+
+                <label for="password">Change Password</label>
+                <input type="password" id="password" placeholder="Change Password">
+
+                <label for="deactivate">Deactivate Account</label>
+                <button id="deactivate">Deactivate Account</button>
+            </section>
+            
+            <section id="privacySection">
+                <h2>Privacy and Safety</h2>
+                <label for="posts">Your Posts</label>
+                <select id="posts">
+                    <option>Everyone</option>
+                    <option>Followers</option>
+                    <option>Only Me</option>
+                </select>
+
+                <label for="content">Content You See</label>
+                <select id="content">
+                    <option>All Content</option>
+                    <option>Filtered Content</option>
+                </select>
+
+                <label for="mute">Mute and Block</label>
+                <select id="mute">
+                    <option>No Accounts Muted or Blocked</option>
+                </select>
+
+                <label for="messages">Direct Messages</label>
+                <select id="messages">
+                    <option>Everyone</option>
+                    <option>Followers</option>
+                </select>
+
+                <label for="ads">Ad Preferences</label>
+                <select id="ads">
+                    <option>Personalized Ads</option>
+                    <option>Non-Personalized Ads</option>
+                </select>
+
+                <label for="location">Location Information</label>
+                <select id="location">
+                    <option>Use Location</option>
+                    <option>Do Not Use Location</option>
+                </select>
+            </section>
+            
+            <section id="accessibilitySection">
+                <h2>Accessibility</h2>
+                <label for="language">Change Language</label>
+                <select id="language">
+                    <option>English</option>
+                    <option>Spanish</option>
+                    <option>French</option>
+                </select>
+
+                <label for="theme">Theme</label>
+                <select id="theme">
+                    <option>Light Theme</option>
+                    <option>Dark Theme</option>
+                </select>
+
+                <label for="display">Display Settings</label>
+                <select id="display">
+                    <option>Default</option>
+                    <option>Large Text</option>
+                    <option>High Contrast</option>
+                </select>
+            </section>
+
+            <section id="helpSection">
+                <h2>Help Center</h2>
+                <p>Visit our <a href="#" style="color: blue;">Help Center</a> for more information or to submit a support ticket.</p>
+                <p>If you have any issues or questions, you can contact our support team through the Help Center.</p>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const accountTab = document.getElementById('accountTab');
+        const privacyTab = document.getElementById('privacyTab');
+        const accessibilityTab = document.getElementById('accessibilityTab');
+        const helpTab = document.getElementById('helpTab');
+
+        const accountSection = document.getElementById('accountSection');
+        const privacySection = document.getElementById('privacySection');
+        const accessibilitySection = document.getElementById('accessibilitySection');
+        const helpSection = document.getElementById('helpSection');
+
+        
+        function switchSection(activeTab, activeSection) {
+            
+            document.querySelectorAll('ul li').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('section').forEach(section => section.classList.remove('active'));
+
+
+            activeTab.classList.add('active');
+            activeSection.classList.add('active');
+        }
+
+        
+        accountTab.addEventListener('click', () => switchSection(accountTab, accountSection));
+        privacyTab.addEventListener('click', () => switchSection(privacyTab, privacySection));
+        accessibilityTab.addEventListener('click', () => switchSection(accessibilityTab, accessibilitySection));
+        helpTab.addEventListener('click', () => switchSection(helpTab, helpSection));
+    </script>
+
+</body>
+</html>

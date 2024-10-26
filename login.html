@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup Page</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 60%;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .left, .right {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            transition: 0.5s;
+        }
+        .left {
+            background-color: white;
+        }
+        .right {
+            background: linear-gradient(to right, #000, #007bff);
+            color: white;
+            cursor: pointer;
+        }
+        .right:hover {
+            background-color: #333;
+        }
+        .right h2 {
+            margin-bottom: 20px;
+        }
+        form {
+            display: none;
+        }
+        form.active {
+            display: flex;
+            flex-direction: column;
+        }
+        input {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            background-color: black;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #333;
+        }
+        select {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            display: none; 
+        }
+        .loading-screen p {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    
+    <div class="loading-screen" id="loadingScreen">
+        <p>Hang tight! We're finding your best matches.</p>
+    </div>
+
+    <div class="container">
+
+        <div class="left">
+            <form id="loginForm" class="active" onsubmit="return handleLogin(event)">
+                <h2>Login</h2>
+                <input type="text" placeholder="Username" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+                <p>Don't have an account? <span id="switchToSignUp" style="color: blue; cursor: pointer;">Sign Up</span></p>
+            </form>
+
+            <form id="signUpForm">
+                <h2>Sign Up</h2>
+                <label for="userType">Are you a student or Mentor?</label>
+                <select id="userType" onchange="toggleServiceProviderFields()">
+                    <option value="client">Student</option>
+                    <option value="serviceProvider">Mentor</option>
+                </select>
+                <input type="text" placeholder="Username" required>
+                <select id="gender" onchange="togglegenderfields()">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+
+
+                <div id="serviceProviderFields" style="display: none;">
+                    <input type="tel" placeholder="Phone Number" required>
+                    <select id="gender" onchange="togglegenderfields()">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="file" placeholder="Attach ID" required>
+                    <input type="file" placeholder="Attach Proof of Address" required>
+                </div>
+
+                <button type="submit">Sign Up</button>
+                <p>Already have an account? <span id="switchToLogin" style="color: blue; cursor: pointer;">Login</span></p>
+            </form>
+        </div>
+
+
+        <div class="right" id="switchSide">
+            <h2>WELCOME to PeerConnect!</h2>
+            <p>Click anywhere in this area to either log in or sign up.</p>
+            <p>&copy; 2024 PeerConnect. All Rights Reserved.</p>
+        </div>
+    </div>
+
+    <script>
+        const switchSide = document.getElementById('switchSide');
+        const loginForm = document.getElementById('loginForm');
+        const signUpForm = document.getElementById('signUpForm');
+        const switchToSignUp = document.getElementById('switchToSignUp');
+        const switchToLogin = document.getElementById('switchToLogin');
+        const serviceProviderFields = document.getElementById('serviceProviderFields');
+        const userType = document.getElementById('userType');
+        const loadingScreen = document.getElementById('loadingScreen');
+
+
+        switchSide.addEventListener('click', () => {
+            loginForm.classList.toggle('active');
+            signUpForm.classList.toggle('active');
+        });
+
+        switchToSignUp.addEventListener('click', () => {
+            loginForm.classList.remove('active');
+            signUpForm.classList.add('active');
+        });
+
+        switchToLogin.addEventListener('click', () => {
+            signUpForm.classList.remove('active');
+            loginForm.classList.add('active');
+        });
+
+        function toggleServiceProviderFields() {
+            if (userType.value === 'serviceProvider') {
+                serviceProviderFields.style.display = 'block';
+            } else {
+                serviceProviderFields.style.display = 'none';
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault(); 
+
+            const username = loginForm.querySelector('input[type="text"]').value;
+            const password = loginForm.querySelector('input[type="password"]').value;
+
+
+            if (username && password) {
+
+                loadingScreen.style.display = 'flex';
+                
+
+                setTimeout(() => {
+                    window.location.href = 'feed.php';
+                }, 5000); 
+            }
+        }
+    </script>
+
+</body>
+</html>
